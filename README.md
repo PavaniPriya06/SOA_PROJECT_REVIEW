@@ -1,5 +1,9 @@
 # React + Vite
 
+## Deployment configuration
+
+The frontend calls the Spring Cloud Gateway through `VITE_API_BASE_URL`. For local development it defaults to `http://localhost:8080`. For Vercel or any other hosted deployment, configure `VITE_API_BASE_URL` as the public HTTPS URL of the deployed API Gateway before building. A hosted frontend cannot reach services running on a developer's `localhost`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

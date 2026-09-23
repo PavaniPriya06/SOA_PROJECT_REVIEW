@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+
+if (!configuredApiBaseUrl && !import.meta.env.DEV) {
+  throw new Error('VITE_API_BASE_URL is required for production deployments.')
+}
+
+export const API_BASE_URL = configuredApiBaseUrl || 'http://localhost:8080'
 export const TOKEN_STORAGE_KEY = 'bidvelocity_token'
 export const USER_STORAGE_KEY = 'bidvelocity_current_user'
 
