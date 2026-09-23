@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,21 +23,33 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final BiddingServiceClient biddingServiceClient;
     private final PaymentServiceClient paymentServiceClient;
+    private final AuctionImageStorageService imageStorageService;
 
     public AuctionService(AuctionRepository auctionRepository, BiddingServiceClient biddingServiceClient,
-                          PaymentServiceClient paymentServiceClient) {
+                          PaymentServiceClient paymentServiceClient,
+                          AuctionImageStorageService imageStorageService) {
         this.auctionRepository = auctionRepository;
         this.biddingServiceClient = biddingServiceClient;
         this.paymentServiceClient = paymentServiceClient;
+        this.imageStorageService = imageStorageService;
+    }
+
+    public AuctionService(AuctionRepository auctionRepository, BiddingServiceClient biddingServiceClient,
+                          PaymentServiceClient paymentServiceClient) {
+        this(auctionRepository, biddingServiceClient, paymentServiceClient, null);
     }
 
     /**
      * Create a new auction with UPCOMING status
      */
-    public Auction createAuction(Auction auction) {
+    public Auction createAuction(Auction auction, MultipartFile image) {
         // Validate that endTime is after startTime
         if (auction.getEndTime().isBefore(auction.getStartTime())) {
             throw new InvalidAuctionOperationException("End time must be after start time.");
+        }
+
+        if (image != null && !image.isEmpty() && imageStorageService != null) {
+            auction.setImage(imageStorageService.store(image));
         }
 
         // Set initial status to UPCOMING

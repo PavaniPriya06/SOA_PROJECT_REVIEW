@@ -27,13 +27,17 @@ public class AuctionController {
         this.imageStorageService = imageStorageService;
     }
 
+    public AuctionController(AuctionService auctionService) {
+        this(auctionService, null);
+    }
+
     /**
      * Create a new auction
      * POST /auctions
      */
     @PostMapping
     public ResponseEntity<Auction> createAuction(@Valid @RequestBody Auction auction) {
-        Auction createdAuction = auctionService.createAuction(auction);
+        Auction createdAuction = auctionService.createAuction(auction, null);
         return new ResponseEntity<>(createdAuction, HttpStatus.CREATED);
     }
 
