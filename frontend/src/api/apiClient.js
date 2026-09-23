@@ -2,11 +2,10 @@ import axios from 'axios'
 
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
 
-if (!configuredApiBaseUrl && !import.meta.env.DEV) {
-  throw new Error('VITE_API_BASE_URL is required for production deployments.')
-}
-
 export const API_BASE_URL = configuredApiBaseUrl || 'http://localhost:8080'
+export const API_CONFIGURATION_ERROR = !configuredApiBaseUrl && !import.meta.env.DEV
+  ? 'The deployed frontend is missing VITE_API_BASE_URL. Configure it with the public API Gateway URL in Vercel, then redeploy.'
+  : ''
 export const TOKEN_STORAGE_KEY = 'bidvelocity_token'
 export const USER_STORAGE_KEY = 'bidvelocity_current_user'
 

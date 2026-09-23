@@ -18,6 +18,7 @@ import PaymentPage from './pages/PaymentPage'
 import ProfilePage from './pages/ProfilePage'
 import { createNotification, readNotifications } from './utils/notifications'
 import { auctionApi } from './api/auctionApi'
+import { API_CONFIGURATION_ERROR } from './api/apiClient'
 import { authApi } from './api/authApi'
 import './App.css'
 
@@ -40,6 +41,12 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
+    if (API_CONFIGURATION_ERROR) {
+      setAuctionError(API_CONFIGURATION_ERROR)
+      setIsLoadingAuctions(false)
+      return undefined
+    }
+
     let active = true
     auctionApi.getAuctions()
       .then((auctions) => {
